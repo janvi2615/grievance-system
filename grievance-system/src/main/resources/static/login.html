@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Grievance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f0f4f8; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">🏛️ Citizen Grievance System</a>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h3 class="text-center mb-4">Login</h3>
+                <div id="message"></div>
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="mb-3">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password">
+                </div>
+                <button onclick="login()" class="btn btn-primary w-100">Login</button>
+                <p class="text-center mt-3">Don't have account? <a href="register.html">Register</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function login() {
+        const user = {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        };
+
+        const response = await fetch('/api/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        });
+
+        const result = await response.text();
+
+        if (result.includes('successful')) {
+            document.getElementById('message').innerHTML = '<div class="alert alert-success">' + result + '</div>';
+            if (result.includes('admin')) {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'complaint.html';
+            }
+        } else {
+            document.getElementById('message').innerHTML = '<div class="alert alert-danger">' + result + '</div>';
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
